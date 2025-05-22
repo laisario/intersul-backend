@@ -35,7 +35,7 @@ class Endereco(models.Model):
     bairro = models.ForeignKey(Bairro, on_delete=models.CASCADE)
     logradouro = models.TextField()
     complemento = models.TextField(null=True, blank=True)
-
+    
     def __str__(self):
         return "{}, {} - {} - {}: {}".format(
             self.logradouro,

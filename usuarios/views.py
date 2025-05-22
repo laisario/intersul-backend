@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import filters, generics, permissions, status, viewsets
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
-from .serializers import (RegistrarEnderecoSerializer, RegistrarUsuarioSerializer, ClienteSerializer, LoginSerializer, RegistrarClienteSerializer, RegistrarFuncionarioSerializer, FuncionarioSerializer)
+from .serializers import (RegistrarUsuarioSerializer, ClienteSerializer, LoginSerializer, RegistrarClienteSerializer, RegistrarFuncionarioSerializer, FuncionarioSerializer)
 from enderecos.models import Endereco
 from .models import Cliente, Funcionario
 
@@ -33,11 +33,6 @@ class FuncionarioViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Funcionario.objects.all().order_by()
 
-
-class RegistrarEnderecoView(generics.CreateAPIView):
-    queryset = Endereco.objects.all()
-    permission_classes = (AllowAny,)
-    serializer_class = RegistrarEnderecoSerializer
 
 
 class RegistrarUsuarioView(generics.CreateAPIView):

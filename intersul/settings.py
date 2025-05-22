@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'maquinas',
     'servicos',
     'usuarios',
-    'enderecos'
+    'enderecos',
+    'copiadoras',
 ]
 
 MIDDLEWARE = [
