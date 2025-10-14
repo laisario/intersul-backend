@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: db_intersul
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_DATABASE:-intersul}
+      MYSQL_USER: ${DB_USERNAME:-intersul_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-intersul_password}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - intersul_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:7-alpine
+    container_name: intersul_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - intersul_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 3s
+      retries: 5
+
+  # NestJS Web API
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: intersul_web
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USERNAME: ${DB_USERNAME:-intersul_user}
+      DB_PASSWORD: ${DB_PASSWORD:-intersul_password}
+      DB_DATABASE: ${DB_DATABASE:-intersul}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-7d}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - intersul_network
+    command: npm run start:dev
+
+  # Celery Worker for background tasks (disabled for MVP)
+  # celery:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.celery
+  #   container_name: intersul_celery
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: ${NODE_ENV:-development}
+  #     DB_HOST: db
+  #     DB_PORT: 3306
+  #     DB_USERNAME: ${DB_USERNAME:-intersul_user}
+  #     DB_PASSWORD: ${DB_PASSWORD:-intersul_password}
+  #     DB_DATABASE: ${DB_DATABASE:-intersul}
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - intersul_network
+  #   command: npm run celery:worker
+
+  # Celery Beat for scheduled tasks (disabled for MVP)
+  # celery-beat:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.celery
+  #   container_name: intersul_celery_beat
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: ${NODE_ENV:-development}
+  #     DB_HOST: db
+  #     DB_PORT: 3306
+  #     DB_USERNAME: ${DB_USERNAME:-intersul_user}
+  #     DB_PASSWORD: ${DB_PASSWORD:-intersul_password}
+  #     DB_DATABASE: ${DB_DATABASE:-intersul}
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - intersul_network
+  #   command: npm run celery:beat
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  intersul_network:
+    driver: bridge
