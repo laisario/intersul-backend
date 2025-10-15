@@ -8,28 +8,27 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { ServiceType } from '../../../common/enums/service-type.enum';
 import { Client } from '../../clients/entities/client.entity';
-import { CopyMachine } from '../../copy-machines/entities/copy-machine.entity';
-import { ServiceStep } from './service-step.entity';
-import { Maintenance } from '../maintenance/entities/maintenance.entity';
+import { ClientCopyMachine } from '../../copy-machines/entities/client-copy-machine.entity';
+import { Category } from './category.entity';
+import { Step } from './step.entity';
 
 @Entity('services')
 export class Service {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'enum',
-    enum: ServiceType,
-  })
-  type: ServiceType;
-
   @Column()
   client_id: number;
 
   @Column()
-  copy_machine_id: number;
+  category_id: number;
+
+  @Column({ nullable: true })
+  client_copy_machine_id: number;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -41,13 +40,14 @@ export class Service {
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
-  @ManyToOne(() => CopyMachine, (copyMachine) => copyMachine.services)
-  @JoinColumn({ name: 'copy_machine_id' })
-  copyMachine: CopyMachine;
+  @ManyToOne(() => Category, (category) => category.services)
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
 
-  @OneToMany(() => ServiceStep, (step) => step.service)
-  steps: ServiceStep[];
+  @ManyToOne(() => ClientCopyMachine, (clientCopyMachine) => clientCopyMachine.services, { nullable: true })
+  @JoinColumn({ name: 'client_copy_machine_id' })
+  clientCopyMachine: ClientCopyMachine;
 
-  @OneToMany(() => Maintenance, (maintenance) => maintenance.service)
-  maintenance: Maintenance[];
+  @OneToMany(() => Step, (step) => step.service_id)
+  steps: Step[];
 }

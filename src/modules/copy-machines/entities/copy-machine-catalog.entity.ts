@@ -6,10 +6,10 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Service } from '../../services/entities/service.entity';
+import { ClientCopyMachine } from './client-copy-machine.entity';
 
-@Entity('copy_machines')
-export class CopyMachine {
+@Entity('copy_machine_catalog')
+export class CopyMachineCatalog {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,17 +19,17 @@ export class CopyMachine {
   @Column()
   manufacturer: string;
 
-  @Column({ unique: true })
-  serial_number: string;
-
   @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ type: 'json', nullable: true })
   features: string[];
 
-  @Column({ default: true })
-  status: boolean;
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  price: number;
+
+  @Column({ nullable: true })
+  quantity: number;
 
   @CreateDateColumn()
   created_at: Date;
@@ -37,6 +37,6 @@ export class CopyMachine {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => Service, (service) => service.copyMachine)
-  services: Service[];
+  @OneToMany(() => ClientCopyMachine, (clientCopyMachine) => clientCopyMachine.catalogCopyMachine)
+  clientCopyMachines: ClientCopyMachine[];
 }

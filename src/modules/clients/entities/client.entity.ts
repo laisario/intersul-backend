@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Service } from '../../services/entities/service.entity';
+import { ClientCopyMachine } from '../../copy-machines/entities/client-copy-machine.entity';
 
 @Entity('clients')
 export class Client {
@@ -39,4 +40,7 @@ export class Client {
 
   @OneToMany(() => Service, (service) => service.client)
   services: Service[];
+
+  @OneToMany(() => ClientCopyMachine, (clientCopyMachine) => clientCopyMachine.client)
+  copyMachines: ClientCopyMachine[];
 }

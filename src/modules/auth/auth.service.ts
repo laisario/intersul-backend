@@ -19,7 +19,7 @@ export class AuthService {
 
   async validateUser(userId: number): Promise<User> {
     const user = await this.usersRepository.findOne({
-      where: { id: userId, status: true },
+      where: { id: userId, active: true },
     });
     if (!user) {
       throw new UnauthorizedException('User not found or inactive');
@@ -29,7 +29,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.usersRepository.findOne({
-      where: { email: loginDto.email, status: true },
+      where: { email: loginDto.email, active: true },
     });
 
     if (!user) {
@@ -96,5 +96,9 @@ export class AuthService {
 
   async findById(id: number): Promise<User> {
     return this.usersRepository.findOne({ where: { id } });
+  }
+
+  async findOneByName(name: string): Promise<User> {
+    return this.usersRepository.findOne({ where: { name } });
   }
 }

@@ -1,7 +1,7 @@
-import { IsString, IsArray, IsOptional, MinLength, IsBoolean } from 'class-validator';
+import { IsString, IsArray, IsOptional, MinLength, IsBoolean, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCopyMachineDto {
+export class CreateCopyMachineCatalogDto {
   @ApiProperty({
     example: 'HP LaserJet Pro M404dn',
     description: 'Copy machine model',
@@ -17,14 +17,6 @@ export class CreateCopyMachineDto {
   @IsString()
   @MinLength(2)
   manufacturer: string;
-
-  @ApiProperty({
-    example: 'CN12345678',
-    description: 'Copy machine serial number',
-  })
-  @IsString()
-  @MinLength(5)
-  serial_number: string;
 
   @ApiProperty({
     example: 'High-performance monochrome laser printer',
@@ -47,8 +39,26 @@ export class CreateCopyMachineDto {
   features?: string[];
 
   @ApiProperty({
+    example: 1500.00,
+    description: 'Selling price',
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  price?: number;
+
+  @ApiProperty({
+    example: 150.00,
+    description: 'Monthly rental price',
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  monthly_rent_price?: number;
+
+  @ApiProperty({
     example: true,
-    description: 'Copy machine status',
+    description: 'Copy machine availability status',
     required: false,
     default: true,
   })

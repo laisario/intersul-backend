@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { UserRole } from '../../../common/enums/user-role.enum';
-import { ServiceStep } from '../../services/entities/service-step.entity';
+import { Step } from '../../services/entities/step.entity';
 
 @Entity('users')
 export class User {
@@ -37,7 +37,7 @@ export class User {
   position: string;
 
   @Column({ default: true })
-  status: boolean;
+  active: boolean;
 
   @CreateDateColumn()
   created_at: Date;
@@ -45,6 +45,6 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => ServiceStep, (step) => step.responsibleEmployee)
-  assignedSteps: ServiceStep[];
+  @OneToMany(() => Step, (step) => step.responsable)
+  assignedSteps: Step[];
 }
