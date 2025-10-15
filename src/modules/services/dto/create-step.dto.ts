@@ -40,9 +40,5 @@ export class CreateStepDto {
 
   @IsNumber()
   @IsOptional()
-  category_id?: number;
-
-  @IsNumber()
-  @IsOptional()
   service_id?: number;
 }

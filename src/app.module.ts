@@ -9,7 +9,6 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AuthModule } from './modules/auth/auth.module';
 import { ClientsModule } from './modules/clients/clients.module';
 import { CopyMachinesModule } from './modules/copy-machines/copy-machines.module';
-import { SuppliesModule } from './modules/supplies/supplies.module';
 import { ServicesModule } from './modules/services/services.module';
 
 @Module({
@@ -21,7 +20,6 @@ import { ServicesModule } from './modules/services/services.module';
     AuthModule,
     ClientsModule,
     CopyMachinesModule,
-    SuppliesModule,
     ServicesModule,
   ],
   controllers: [AppController],

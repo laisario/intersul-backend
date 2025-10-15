@@ -1,7 +1,7 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateServiceBaseDto {
+export class CreateServiceDto {
   @ApiProperty({
     example: 1,
     description: 'Client ID',
