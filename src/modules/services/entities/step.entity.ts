@@ -67,11 +67,12 @@ export class Step {
   @JoinColumn({ name: 'responsable_id' })
   responsable: User;
 
-  @ManyToOne(() => Category, (category) => category.steps)
+  @ManyToOne(() => Category, (category) => category.steps, {
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'category_id' })
   category: Category;
 
-  // Service relationship will be added later to avoid circular dependency
 
   @OneToOne(() => Approval, (approval) => approval.step)
   approval: Approval;

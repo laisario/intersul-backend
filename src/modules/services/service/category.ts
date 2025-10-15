@@ -22,15 +22,21 @@ export class CategoryService {
   }
 
   async findAll(): Promise<Category[]> {
-    return this.categoryRepository.find();
+    return this.categoryRepository.find({
+      relations: ['steps'],
+      order: { created_at: 'DESC' },
+    });
   }
 
   async findOne(id: number): Promise<Category> {
-    return this.categoryRepository.findOne({ where: { id } });
+    return this.categoryRepository.findOne({ 
+      where: { id },
+      relations: ['steps'],
+    });
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
-    const category = await this.categoryRepository.findOne({ where: { id } });
+    const category = await this.categoryRepository.findOne({ where: { id }, relations: ['steps'], });
     Object.assign(category, updateCategoryDto);
     return this.categoryRepository.save(category);
   }
