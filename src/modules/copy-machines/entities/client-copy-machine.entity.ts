@@ -12,6 +12,7 @@ import { AcquisitionType } from '../../../common/enums/acquisition-type.enum';
 import { Client } from '../../clients/entities/client.entity';
 import { CopyMachineCatalog } from './copy-machine-catalog.entity';
 import { Service } from '../../services/entities/service.entity';
+import { Franchise } from './franchise.entity';
 
 @Entity('client_copy_machines')
 export class ClientCopyMachine {
@@ -42,6 +43,12 @@ export class ClientCopyMachine {
   })
   acquisition_type: AcquisitionType;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  value: number;
+
+  @Column({ nullable: true })
+  franchise_id: number;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -58,4 +65,8 @@ export class ClientCopyMachine {
 
   @OneToMany(() => Service, (service) => service.clientCopyMachine)
   services: Service[];
+
+  @ManyToOne(() => Franchise, (franchise) => franchise.clientCopyMachines, { nullable: true })
+  @JoinColumn({ name: 'franchise_id' })
+  franchise: Franchise;
 }

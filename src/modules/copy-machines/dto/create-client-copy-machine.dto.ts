@@ -79,4 +79,22 @@ export class CreateClientCopyMachineDto {
   @IsDateString()
   @IsOptional()
   contract_end_date?: string;
+
+  @ApiProperty({
+    example: 2500.00,
+    description: 'Machine value in currency',
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  value?: number;
+
+  @ApiProperty({
+    example: 1,
+    description: 'Franchise ID (rental plan)',
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  franchise_id?: number;
 }

@@ -23,6 +23,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
+
+  // criar dto para caso de criar cliente com maquina de copiar do cliente
   @Post()
   @ApiOperation({ summary: 'Create a new client' })
   @ApiResponse({ status: 201, description: 'Client created successfully', type: Client })

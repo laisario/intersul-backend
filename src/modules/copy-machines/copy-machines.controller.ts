@@ -15,11 +15,14 @@ import { CreateCopyMachineCatalogDto } from './dto/create-copy-machine-catalog.d
 import { UpdateCopyMachineCatalogDto } from './dto/update-copy-machine-catalog.dto';
 import { CreateClientCopyMachineDto } from './dto/create-client-copy-machine.dto';
 import { UpdateClientCopyMachineDto } from './dto/update-client-copy-machine.dto';
+import { CreateFranchiseDto } from './dto/create-franchise.dto';
+import { UpdateFranchiseDto } from './dto/update-franchise.dto';
 import { CopyMachineCatalog } from './entities/copy-machine-catalog.entity';
 import { ClientCopyMachine } from './entities/client-copy-machine.entity';
+import { Franchise } from './entities/franchise.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@ApiTags('Copy Machines')
+@ApiTags('Máquinas Copiadoras')
 @Controller('copy-machines')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -28,32 +31,25 @@ export class CopyMachinesController {
 
   // Catalog Copy Machine endpoints
   @Post('catalog')
-  @ApiOperation({ summary: 'Create a new catalog copy machine' })
-  @ApiResponse({ status: 201, description: 'Catalog copy machine created successfully', type: CopyMachineCatalog })
-  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiOperation({ summary: 'Criar uma nova máquina copiadora do catálogo' })
+  @ApiResponse({ status: 201, description: 'Máquina copiadora do catálogo criada com sucesso', type: CopyMachineCatalog })
+  @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
   async createCatalog(@Body() createCopyMachineCatalogDto: CreateCopyMachineCatalogDto): Promise<CopyMachineCatalog> {
     return this.copyMachinesService.createCatalog(createCopyMachineCatalogDto);
   }
 
   @Get('catalog')
-  @ApiOperation({ summary: 'Get all catalog copy machines' })
-  @ApiResponse({ status: 200, description: 'List of all catalog copy machines', type: [CopyMachineCatalog] })
+  @ApiOperation({ summary: 'Obter todas as máquinas copiadoras do catálogo' })
+  @ApiResponse({ status: 200, description: 'Lista de todas as máquinas copiadoras do catálogo', type: [CopyMachineCatalog] })
   async findAllCatalog(): Promise<CopyMachineCatalog[]> {
     return this.copyMachinesService.findAllCatalog();
   }
 
-  @Get('catalog/:id')
-  @ApiOperation({ summary: 'Get catalog copy machine by ID' })
-  @ApiResponse({ status: 200, description: 'Catalog copy machine found', type: CopyMachineCatalog })
-  @ApiResponse({ status: 404, description: 'Catalog copy machine not found' })
-  async findOneCatalog(@Param('id', ParseIntPipe) id: number): Promise<CopyMachineCatalog> {
-    return this.copyMachinesService.findOneCatalog(id);
-  }
 
   @Patch('catalog/:id')
-  @ApiOperation({ summary: 'Update catalog copy machine' })
-  @ApiResponse({ status: 200, description: 'Catalog copy machine updated successfully', type: CopyMachineCatalog })
-  @ApiResponse({ status: 404, description: 'Catalog copy machine not found' })
+  @ApiOperation({ summary: 'Atualizar máquina copiadora do catálogo' })
+  @ApiResponse({ status: 200, description: 'Máquina copiadora do catálogo atualizada com sucesso', type: CopyMachineCatalog })
+  @ApiResponse({ status: 404, description: 'Máquina copiadora do catálogo não encontrada' })
   async updateCatalog(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCopyMachineCatalogDto: UpdateCopyMachineCatalogDto,
@@ -62,41 +58,26 @@ export class CopyMachinesController {
   }
 
   @Delete('catalog/:id')
-  @ApiOperation({ summary: 'Delete catalog copy machine' })
-  @ApiResponse({ status: 200, description: 'Catalog copy machine deleted successfully' })
-  @ApiResponse({ status: 404, description: 'Catalog copy machine not found' })
+  @ApiOperation({ summary: 'Excluir máquina copiadora do catálogo' })
+  @ApiResponse({ status: 200, description: 'Máquina copiadora do catálogo excluída com sucesso' })
+  @ApiResponse({ status: 404, description: 'Máquina copiadora do catálogo não encontrada' })
   async removeCatalog(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.copyMachinesService.removeCatalog(id);
   }
 
   // Client Copy Machine endpoints
   @Post('client')
-  @ApiOperation({ summary: 'Create a new client copy machine' })
-  @ApiResponse({ status: 201, description: 'Client copy machine created successfully', type: ClientCopyMachine })
-  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiOperation({ summary: 'Criar uma nova máquina copiadora do cliente' })
+  @ApiResponse({ status: 201, description: 'Máquina copiadora do cliente criada com sucesso', type: ClientCopyMachine })
+  @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
   async createClientCopyMachine(@Body() createClientCopyMachineDto: CreateClientCopyMachineDto): Promise<ClientCopyMachine> {
     return this.copyMachinesService.createClientCopyMachine(createClientCopyMachineDto);
   }
 
-  @Get('client')
-  @ApiOperation({ summary: 'Get all client copy machines' })
-  @ApiResponse({ status: 200, description: 'List of all client copy machines', type: [ClientCopyMachine] })
-  async findAllClientCopyMachines(): Promise<ClientCopyMachine[]> {
-    return this.copyMachinesService.findAllClientCopyMachines();
-  }
-
-  @Get('client/:id')
-  @ApiOperation({ summary: 'Get client copy machine by ID' })
-  @ApiResponse({ status: 200, description: 'Client copy machine found', type: ClientCopyMachine })
-  @ApiResponse({ status: 404, description: 'Client copy machine not found' })
-  async findOneClientCopyMachine(@Param('id', ParseIntPipe) id: number): Promise<ClientCopyMachine> {
-    return this.copyMachinesService.findOneClientCopyMachine(id);
-  }
-
   @Patch('client/:id')
-  @ApiOperation({ summary: 'Update client copy machine' })
-  @ApiResponse({ status: 200, description: 'Client copy machine updated successfully', type: ClientCopyMachine })
-  @ApiResponse({ status: 404, description: 'Client copy machine not found' })
+  @ApiOperation({ summary: 'Atualizar máquina copiadora do cliente' })
+  @ApiResponse({ status: 200, description: 'Máquina copiadora do cliente atualizada com sucesso', type: ClientCopyMachine })
+  @ApiResponse({ status: 404, description: 'Máquina copiadora do cliente não encontrada' })
   async updateClientCopyMachine(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateClientCopyMachineDto: UpdateClientCopyMachineDto,
@@ -105,17 +86,60 @@ export class CopyMachinesController {
   }
 
   @Delete('client/:id')
-  @ApiOperation({ summary: 'Delete client copy machine' })
-  @ApiResponse({ status: 200, description: 'Client copy machine deleted successfully' })
-  @ApiResponse({ status: 404, description: 'Client copy machine not found' })
+  @ApiOperation({ summary: 'Excluir máquina copiadora do cliente' })
+  @ApiResponse({ status: 200, description: 'Máquina copiadora do cliente excluída com sucesso' })
+  @ApiResponse({ status: 404, description: 'Máquina copiadora do cliente não encontrada' })
   async removeClientCopyMachine(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.copyMachinesService.removeClientCopyMachine(id);
   }
 
   @Get('client/by-client/:clientId')
-  @ApiOperation({ summary: 'Get all copy machines for a specific client' })
-  @ApiResponse({ status: 200, description: 'List of client copy machines', type: [ClientCopyMachine] })
+  @ApiOperation({ summary: 'Obter todas as máquinas copiadoras de um cliente específico' })
+  @ApiResponse({ status: 200, description: 'Lista de máquinas copiadoras do cliente', type: [ClientCopyMachine] })
   async findByClient(@Param('clientId', ParseIntPipe) clientId: number): Promise<ClientCopyMachine[]> {
     return this.copyMachinesService.findByClient(clientId);
+  }
+
+  // Franchise endpoints
+  @Post('franchise')
+  @ApiOperation({ summary: 'Criar um novo plano de franquia' })
+  @ApiResponse({ status: 201, description: 'Plano de franquia criado com sucesso', type: Franchise })
+  @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
+  async createFranchise(@Body() createFranchiseDto: CreateFranchiseDto): Promise<Franchise> {
+    return this.copyMachinesService.createFranchise(createFranchiseDto);
+  }
+
+  @Get('franchise')
+  @ApiOperation({ summary: 'Obter todos os planos de franquia' })
+  @ApiResponse({ status: 200, description: 'Lista de todos os planos de franquia', type: [Franchise] })
+  async findAllFranchises(): Promise<Franchise[]> {
+    return this.copyMachinesService.findAllFranchises();
+  }
+
+  @Get('franchise/:id')
+  @ApiOperation({ summary: 'Obter plano de franquia por ID' })
+  @ApiResponse({ status: 200, description: 'Plano de franquia encontrado', type: Franchise })
+  @ApiResponse({ status: 404, description: 'Plano de franquia não encontrado' })
+  async findOneFranchise(@Param('id', ParseIntPipe) id: number): Promise<Franchise> {
+    return this.copyMachinesService.findOneFranchise(id);
+  }
+
+  @Patch('franchise/:id')
+  @ApiOperation({ summary: 'Atualizar plano de franquia' })
+  @ApiResponse({ status: 200, description: 'Plano de franquia atualizado com sucesso', type: Franchise })
+  @ApiResponse({ status: 404, description: 'Plano de franquia não encontrado' })
+  async updateFranchise(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateFranchiseDto: UpdateFranchiseDto,
+  ): Promise<Franchise> {
+    return this.copyMachinesService.updateFranchise(id, updateFranchiseDto);
+  }
+
+  @Delete('franchise/:id')
+  @ApiOperation({ summary: 'Excluir plano de franquia' })
+  @ApiResponse({ status: 200, description: 'Plano de franquia excluído com sucesso' })
+  @ApiResponse({ status: 404, description: 'Plano de franquia não encontrado' })
+  async removeFranchise(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.copyMachinesService.removeFranchise(id);
   }
 }

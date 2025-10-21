@@ -50,6 +50,7 @@ export class CreateClientDto {
     example: 'client@example.com',
     description: 'Client email address',
   })
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 }
