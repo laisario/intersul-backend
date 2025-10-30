@@ -1,4 +1,5 @@
-import { IsString, IsArray, IsOptional, MinLength, IsBoolean, IsNumber } from 'class-validator';
+import { IsString, IsArray, IsOptional, MinLength, IsNumber } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCopyMachineCatalogDto {
@@ -33,6 +34,10 @@ export class CreateCopyMachineCatalogDto {
     type: [String],
     required: false,
   })
+  @Transform(({ value }) => {
+    if (value === undefined || value === null) return undefined;
+    return Array.isArray(value) ? value : [value];
+  })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
@@ -43,26 +48,28 @@ export class CreateCopyMachineCatalogDto {
     description: 'Selling price',
     required: false,
   })
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   price?: number;
 
   @ApiProperty({
-    example: 150.00,
-    description: 'Monthly rental price',
+    example: 5,
+    description: 'Available quantity in stock',
     required: false,
   })
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  monthly_rent_price?: number;
+  quantity?: number;
 
   @ApiProperty({
-    example: true,
-    description: 'Copy machine availability status',
+    example: 'https://example.com/images/machine.jpg',
+    description: 'Image URL for the copy machine',
     required: false,
-    default: true,
   })
-  @IsBoolean()
+  @IsString()
   @IsOptional()
-  status?: boolean;
+  file?: any;
+
 }

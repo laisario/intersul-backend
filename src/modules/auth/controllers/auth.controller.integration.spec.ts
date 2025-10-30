@@ -78,7 +78,7 @@ describe('AuthController Integration', () => {
       const loginDto: LoginDto = {
         email: 'test@example.com',
         password: 'password123',
-      };
+      };''
 
       const result = await authController.login(loginDto);
 

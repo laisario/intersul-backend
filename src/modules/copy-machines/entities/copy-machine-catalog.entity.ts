@@ -31,6 +31,9 @@ export class CopyMachineCatalog {
   @Column({ nullable: true })
   quantity: number;
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  file?: string;
+
   @CreateDateColumn()
   created_at: Date;
 

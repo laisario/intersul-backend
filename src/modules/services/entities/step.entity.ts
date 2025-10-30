@@ -12,6 +12,7 @@ import {
 import { StepStatus } from '../../../common/enums/step-status.enum';
 import { User } from '../../auth/entities/user.entity';
 import { Category } from './category.entity';
+import { Service } from './service.entity';
 import { Approval } from '../../common/entities/approval.entity';
 import { Image } from '../../common/entities/image.entity';
 
@@ -73,6 +74,9 @@ export class Step {
   @JoinColumn({ name: 'category_id' })
   category: Category;
 
+  @ManyToOne(() => Service, (service) => service.steps)
+  @JoinColumn({ name: 'service_id' })
+  service: Service;
 
   @OneToOne(() => Approval, (approval) => approval.step)
   approval: Approval;

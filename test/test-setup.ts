@@ -83,7 +83,7 @@ export const testData = {
     name: 'Test User',
     email: 'test@example.com',
     password: 'hashedpassword',
-    role: 'ADMIN',
+    role: 'ADMIN' as any,
     active: true,
     created_at: new Date(),
     updated_at: new Date(),

@@ -48,6 +48,6 @@ export class Service {
   @JoinColumn({ name: 'client_copy_machine_id' })
   clientCopyMachine: ClientCopyMachine;
 
-  @OneToMany(() => Step, (step) => step.service_id)
+  @OneToMany(() => Step, (step) => step.service)
   steps: Step[];
 }

@@ -23,15 +23,46 @@ export class CopyMachinesService {
   ) {}
 
   // Catalog Copy Machine methods
+
   async createCatalog(createCopyMachineCatalogDto: CreateCopyMachineCatalogDto): Promise<CopyMachineCatalog> {
     const copyMachine = this.copyMachineCatalogRepository.create(createCopyMachineCatalogDto);
     return this.copyMachineCatalogRepository.save(copyMachine);
   }
 
-  async findAllCatalog(): Promise<CopyMachineCatalog[]> {
-    return this.copyMachineCatalogRepository.find({
-      order: { created_at: 'DESC' },
-    });
+  async findAllCatalog(
+    search?: string, 
+    page: number = 1, 
+    limit: number = 10
+  ): Promise<{ data: CopyMachineCatalog[]; total: number; page: number; limit: number; totalPages: number }> {
+    const pageNum = Number(page) || 1;
+    const limitNum = Number(limit) || 10;
+    const skip = (pageNum - 1) * limitNum;
+    
+    let queryBuilder = this.copyMachineCatalogRepository
+      .createQueryBuilder('catalog')
+      .orderBy('catalog.created_at', 'DESC');
+    
+    if (search) {
+      queryBuilder = queryBuilder.where(
+        'catalog.model LIKE :search OR catalog.manufacturer LIKE :search OR catalog.description LIKE :search', 
+        { search: `%${search}%` }
+      );
+    }
+    
+    const [data, total] = await queryBuilder
+      .skip(skip)
+      .take(limitNum)
+      .getManyAndCount();
+    
+    const totalPages = Math.ceil(total / limitNum);
+    
+    return {
+      data,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages
+    };
   }
 
   async findOneCatalog(id: number): Promise<CopyMachineCatalog> {

@@ -33,7 +33,7 @@ export class ServicesService {
       .createQueryBuilder('service')
       .leftJoinAndSelect('service.client', 'client')
       .leftJoinAndSelect('service.category', 'category')
-      .leftJoinAndSelect('service.clientCopyMachine', 'clientCopyMachine')
+      // .leftJoinAndSelect('service.clientCopyMachine', 'clientCopyMachine')
       .leftJoinAndSelect('service.steps', 'steps')
 
     if (filters?.category_id) {

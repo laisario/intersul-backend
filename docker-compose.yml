@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # MySQL Database
   db:
     image: mysql:8.0
     container_name: db_intersul
@@ -23,7 +22,6 @@ services:
       timeout: 20s
       retries: 10
 
-  # Redis for caching and sessions
   redis:
     image: redis:7-alpine
     container_name: intersul_redis
@@ -39,7 +37,7 @@ services:
       timeout: 3s
       retries: 5
 
-  # NestJS Web API
+
   web:
     build:
       context: .
@@ -62,6 +60,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - ./uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
